@@ -203,6 +203,79 @@ For large-scale training on multi-GPU systems like those with H100s, **DeepSpeed
 
 3.  **Monitor:** Use tools like `nvidia-smi` and WandB (if enabled) to monitor GPU utilization, memory usage, and training progress. Adjust DeepSpeed config (batch size, grad accum) if you encounter OOM errors or low utilization.
 
+## Using on a Supercomputer with Slurm
+
+This project is optimized for running on supercomputers using the Slurm workload manager. We provide several Slurm scripts to simplify training and evaluation on HPC systems.
+
+### Quick Setup
+
+1. After cloning the repository on your supercomputer, run the setup script:
+   ```bash
+   bash scripts/setup_supercomputer.sh
+   ```
+   This will:
+   - Create a virtual environment
+   - Install required dependencies
+   - Set up DeepSpeed
+   - Make all scripts executable
+   - Create necessary directories
+
+### Slurm Training Scripts
+
+We provide several Slurm scripts tailored for different use cases:
+
+1. **Standard Training** - For basic training on A100 GPUs:
+   ```bash
+   sbatch scripts/slurm_train.sh
+   ```
+
+2. **LoRA Training** - For parameter-efficient training with LoRA:
+   ```bash
+   sbatch scripts/slurm_train_lora.sh
+   ```
+
+3. **Multi-Node Training** - For large-scale training across multiple H100 nodes:
+   ```bash
+   sbatch scripts/slurm_train_multinode.sh
+   ```
+
+4. **Evaluation** - For evaluating trained models:
+   ```bash
+   sbatch scripts/slurm_evaluate.sh
+   ```
+
+### Customizing Slurm Scripts
+
+Each Slurm script has several parameters that you can customize:
+
+1. **Slurm Configuration**:
+   - Adjust time limits, node counts, GPU counts, memory, etc. at the top of each script
+   - Switch between partitions (e.g., for A100s vs H100s) by commenting/uncommenting the partition lines
+
+2. **Model and Training Parameters**:
+   - Change model sizes (7B, 13B, etc.)
+   - Adjust batch sizes
+   - Modify training corpus, sample counts, etc.
+   - Set output directories
+
+Example:
+```bash
+# Edit the script to use different parameters
+vim scripts/slurm_train.sh
+
+# Then submit the job
+sbatch scripts/slurm_train.sh
+```
+
+### DeepSpeed Configurations
+
+The project includes optimized DeepSpeed configurations:
+
+- `configs/deepspeed_config.json` - General configuration
+- `configs/deepspeed_config_h100.json` - Optimized for H100 GPUs
+
+You can customize these configs to better suit your specific hardware and training needs.
+
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
